@@ -126,7 +126,7 @@ function loadNow() {
     
     setTimeout(function () {
         userLocationNotFound();
-    }, 3000);
+    }, 1000);
 }
 
 function userLocationNotFound(){
@@ -140,4 +140,4 @@ setTimeout(function () {
     if(!initLat && !initLng){
         userLocationNotFound();
     }
-}, 3000); 
+}, 1000); 
