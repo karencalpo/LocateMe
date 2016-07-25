@@ -1,0 +1,25 @@
+#map {
+  height:100%;
+  width:100%;
+  margin:0;
+  padding:0;
+}
+
+
+.container-fluid {
+    padding: 0px;
+}
+
+.list-items {
+    padding:20px;
+}
+
+
+.instruction {
+    padding-left: 20px;
+    color: grey;
+}
+
+.bold {
+    color: black;
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Search Map</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- 3rd party libraries -->
+  <script src="jquery/dist/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  
+</head>
+<body>
+  <!-- nav bar -->
+<!--  <nav class="navbar navbar-default">-->
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" id="img_brand" href="#"><img src="img/powered_by_google_on_white.png" /></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <form id="search_bar" class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input id="input_form" type="text" class="form-control" placeholder="Search">
+        </div>
+          <input id="search_btn" type="button" class="btn btn-default" value="Search">
+          <input id="return_btn" type="button" class="btn btn-default" value="Return Home" onclick="loadNow();">
+      </form>
+
+    </div> 
+  </div>
+
+<div id="map"></div>
+    
+<div id="listing">
+  <table id="resultsTable">
+    <tbody id="results"></tbody>
+  </table>
+</div>
+
+<div style="display: none">
+  <div id="info-content">
+    <table>
+      <tr id="iw-url-row" class="iw_table_row">
+        <td id="iw-icon" class="iw_table_icon"></td>
+        <td id="iw-url"></td>
+      </tr>
+      <tr id="iw-address-row" class="iw_table_row">
+        <td class="iw_attribute_name">Address:</td>
+        <td id="iw-address"></td>
+      </tr>
+      <tr id="iw-phone-row" class="iw_table_row">
+        <td class="iw_attribute_name">Telephone:</td>
+        <td id="iw-phone"></td>
+      </tr>
+      <tr id="iw-rating-row" class="iw_table_row">
+        <td class="iw_attribute_name">Rating:</td>
+        <td id="iw-rating"></td>
+      </tr>
+      <tr id="iw-website-row" class="iw_table_row">
+        <td class="iw_attribute_name">Website:</td>
+        <td id="iw-website"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+    
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAb4duvTnAMojZDakIp74XWd4_HaJSxkd8&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="js/places.js"></script>
+</body>
+</html>
