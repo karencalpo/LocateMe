@@ -1,34 +1,13 @@
-//Thank you for your interest in a position with Zenefits! I'd like to invite you to complete the first //round in our interviewing process, which is a coding challenge. There isn't any time limit on this, //and you should choose only ONE of the questions below to answer. There isn't a deadline on submitting //this either, but please let me know immediately if you have any pending offers or a short timeline //that I should know about.
-
-//When completing, please keep in mind that your submission should showcase your knowledge of either //Javascript or CSS programming, depending on your strength. We'd love for you to see this challenge as //an opportunity to showcase your programming skills and because of that, one of our engineers will be //diligent in reviewing your code. Also, you are free to build in your own features to show off your //abilities (for example a build system, tests, user accounts / cloud storage, in addition to other //cool features... the sky is the limit!).
-
-
-//Instructions for Option 1:
-//Create a mobile web app that allows you create, edit, and view short notes. Notes are just small //textual items, like to-do lists.
-//- Notes should be stored using browser local storage
-//- The app should be usable on a standard mobile browser
-
-//Instructions for Option 2:
-//Create a web app (desktop or mobile) that provides a query box and a search button and then calls the //Places Library for Google Maps (https://developers.google.com/maps/documentation/javascript/places). //Format the results to give a good user experience.
-
-//Please provide your program as a zip or tar archive, with an index.html file. Use whatever libraries, //documentation, tutorials, or frameworks you consider necessary. This should be a client-side app, //with little or no server code. Please include a README that gives us some relevant info about your //program. 
- 
-//Once complete, you can submit your finished assignment to the link provided at the bottom of this //email. Or, if you have any problems with uploading, please feel free to email me directly. Thank you!
- 
-//Please submit here: http://app.greenhouse.io/tests/eb1327dfae39b2d1a8c879197a7acc33
-
-// This example requires the Places library. Include the libraries=places
-// parameter when you first load the API. For example:
-// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-
 var input = document.getElementById('input_form');
+var defaultZoom = 13;
+var initLat;
+var initLng;
 window.onload = loadNow;
 
-function initAutocomplete(lat, lng) {
+function initAutocomplete(lat, lng, defaultZoom) {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: parseFloat(lat), lng: parseFloat(lng)},
-          zoom: 13,
+          zoom: defaultZoom,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         });
     
@@ -91,7 +70,7 @@ function initAutocomplete(lat, lng) {
             google.maps.event.addListener(marker, 'click', function() {
                 if(place.photos){   
                     var photo = place.photos[0].getUrl({ 'maxWidth': 100, 'maxHeight': 100 });
-                    var show = "<IMG BORDER='0' SRC=" + photo + "><br>";
+                    var show = "<img border='0' src=" + photo + "><br>";
                 } else {
                     var show = "";
                 }
@@ -111,15 +90,7 @@ function initAutocomplete(lat, lng) {
                 
                 
             });
-            markers.push(marker);
-              
-             
-            //for(var i = 0; i < markers.length; i++){
-//                google.maps.event.addListener(place, 'click', function() {
-//                    infowindow.setContent(place.name);
-//                    infowindow.open(map, this);
-//                });
-            //}  
+            markers.push(marker);  
 
             if (place.geometry.viewport) {
               // Only geocodes have viewport.
@@ -134,21 +105,7 @@ function initAutocomplete(lat, lng) {
           
           
         });
-    
-//        function showInfoWindow() {
-//            var marker = this;
-//            places.getDetails({placeId: marker.placeResult.place_id},
-//                function(place, status) {
-//                  if (status !== google.maps.places.PlacesServiceStatus.OK) {
-//                    return;
-//                  }
-//                  infoWindow.open(map, marker);
-//                  buildIWContent(place);
-//                });
-//        }
-    
-            
-    
+      
         document.getElementById('search_btn').onclick = function () {
         var input = document.getElementById('input_form');
 
@@ -167,12 +124,30 @@ $('#input_form').keypress(function(e) {
 
 function loadNow() {
     if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        initAutocomplete(position.coords.latitude, position.coords.longitude);
-    });
+        navigator.geolocation.getCurrentPosition(function(position) {
+            initLat = position.coords.latitude;
+            initLng = position.coords.longitude;
+            initAutocomplete(initLat, initLng, defaultZoom);
+        });
     } else {
         console.log("Geolocation is not available.");
     }
 }
 
-//google.maps.event.addDomListener(window, 'load', initialize);
+function userLocationNotFound(){
+    initLat = 37.1;
+    initLng = -95.7;
+    defaultZoom = 3;
+    initAutocomplete(initLat, initLng,
+                    defaultZoom);
+    window.console.log("Fallback set: Lat: " + initLat + " and Lng: " + initLng);
+}
+
+setTimeout(function () {
+    if(!initLat && !initLng){
+        window.console.log("No confirmation from user, using fallback");
+        userLocationNotFound();
+    }else{
+        window.console.log("Location was set");
+    }
+}, 1000); 
