@@ -2,7 +2,8 @@ var input = document.getElementById('input_form');
 var defaultZoom = 13;
 var initLat;
 var initLng;
-window.onload = loadNow;
+var markers = [];
+window.onload = load;
 
 function initAutocomplete(lat, lng, defaultZoom) {
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -13,42 +14,31 @@ function initAutocomplete(lat, lng, defaultZoom) {
     
         var infowindow = new google.maps.InfoWindow();
 
-        // Create the search box and link it to the UI element.
         var input = document.getElementById('input_form');
-        var searchBox = new google.maps.places.SearchBox(input);
-        //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-        
-        
+        var searchBox = new google.maps.places.SearchBox(input);     
     
-        // Bias the SearchBox results towards current map's viewport.
         map.addListener('bounds_changed', function() {
           searchBox.setBounds(map.getBounds());
         });
 
-        var markers = [];
-        // Listen for the event fired when the user selects a prediction and retrieve
-        // more details for that place.
+        
         searchBox.addListener('places_changed', function() {
-          var places = searchBox.getPlaces();
-          //console.log(places);    
+          var places = searchBox.getPlaces();  
           if (places.length == 0) {
             return;
           }
 
-          // Clear out the old markers.
           markers.forEach(function(marker) {
             marker.setMap(null);
           });
           markers = [];
 
           var button = document.getElementById('search_btn');
-          
-          // For each place, get the icon, name and location.
+
           var bounds = new google.maps.LatLngBounds();
           places.forEach(function(place) {
           var infowindow = new google.maps.InfoWindow(); 
             if (!place.geometry) {
-              console.log("Returned place contains no geometry");
               return;
             }
             var icon = {
@@ -59,7 +49,6 @@ function initAutocomplete(lat, lng, defaultZoom) {
               scaledSize: new google.maps.Size(25, 25)
             };
 
-            // Create a marker for each place.
             var marker = new google.maps.Marker({
               map: map,
               icon: icon,
@@ -85,15 +74,11 @@ function initAutocomplete(lat, lng, defaultZoom) {
                 var address = string.replace(",", "<br>");
                 infowindow.setContent('<div>' + show + '<strong>' + place.name + '</strong><br>' + rating + address + '<br></div>');
                 infowindow.open(map, this);
-                console.log(typeof(place.formatted_address));
-                console.log(string.replace(",", " + '<br>' + "))
-                
-                
+         
             });
             markers.push(marker);  
 
             if (place.geometry.viewport) {
-              // Only geocodes have viewport.
               bounds.union(place.geometry.viewport);
             } else {
               bounds.extend(place.geometry.location);
@@ -101,9 +86,7 @@ function initAutocomplete(lat, lng, defaultZoom) {
           });
 
           map.fitBounds(bounds);
-            
-          
-          
+                   
         });
       
         document.getElementById('search_btn').onclick = function () {
@@ -122,6 +105,16 @@ $('#input_form').keypress(function(e) {
     return e.keyCode != 13; 
 });
 
+function load() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            initLat = position.coords.latitude;
+            initLng = position.coords.longitude;
+            initAutocomplete(initLat, initLng, defaultZoom);
+        });
+    }    
+}
+
 function loadNow() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -129,25 +122,22 @@ function loadNow() {
             initLng = position.coords.longitude;
             initAutocomplete(initLat, initLng, defaultZoom);
         });
-    } else {
-        console.log("Geolocation is not available.");
-    }
+    } 
+    
+    setTimeout(function () {
+        userLocationNotFound();
+    }, 3000);
 }
 
 function userLocationNotFound(){
     initLat = 37.1;
     initLng = -95.7;
     defaultZoom = 3;
-    initAutocomplete(initLat, initLng,
-                    defaultZoom);
-    window.console.log("Fallback set: Lat: " + initLat + " and Lng: " + initLng);
+    initAutocomplete(initLat, initLng, defaultZoom);
 }
 
 setTimeout(function () {
     if(!initLat && !initLng){
-        window.console.log("No confirmation from user, using fallback");
         userLocationNotFound();
-    }else{
-        window.console.log("Location was set");
     }
-}, 1000); 
+}, 3000); 
