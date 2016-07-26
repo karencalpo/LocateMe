@@ -3,7 +3,7 @@ var defaultZoom = 13;
 var initLat;
 var initLng;
 var markers = [];
-window.onload = load;
+window.onload = loadNow;
 
 function initAutocomplete(lat, lng, defaultZoom) {
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -13,15 +13,13 @@ function initAutocomplete(lat, lng, defaultZoom) {
         });
     
         var infowindow = new google.maps.InfoWindow();
-
         var input = document.getElementById('input_form');
-        var searchBox = new google.maps.places.SearchBox(input);     
+        var searchBox = new google.maps.places.SearchBox(input);
     
         map.addListener('bounds_changed', function() {
           searchBox.setBounds(map.getBounds());
         });
 
-        
         searchBox.addListener('places_changed', function() {
           var places = searchBox.getPlaces();  
           if (places.length == 0) {
@@ -34,8 +32,8 @@ function initAutocomplete(lat, lng, defaultZoom) {
           markers = [];
 
           var button = document.getElementById('search_btn');
-
           var bounds = new google.maps.LatLngBounds();
+            
           places.forEach(function(place) {
           var infowindow = new google.maps.InfoWindow(); 
             if (!place.geometry) {
@@ -74,7 +72,7 @@ function initAutocomplete(lat, lng, defaultZoom) {
                 var address = string.replace(",", "<br>");
                 infowindow.setContent('<div>' + show + '<strong>' + place.name + '</strong><br>' + rating + address + '<br></div>');
                 infowindow.open(map, this);
-         
+                    
             });
             markers.push(marker);  
 
@@ -86,7 +84,7 @@ function initAutocomplete(lat, lng, defaultZoom) {
           });
 
           map.fitBounds(bounds);
-                   
+    
         });
       
         document.getElementById('search_btn').onclick = function () {
@@ -97,7 +95,6 @@ function initAutocomplete(lat, lng, defaultZoom) {
                 keyCode: 13
             });
         };
-    
         
 }
 
@@ -105,39 +102,21 @@ $('#input_form').keypress(function(e) {
     return e.keyCode != 13; 
 });
 
-function load() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            initLat = position.coords.latitude;
-            initLng = position.coords.longitude;
-            initAutocomplete(initLat, initLng, defaultZoom);
-        });
-    }    
-}
-
 function loadNow() {
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
             initLat = position.coords.latitude;
             initLng = position.coords.longitude;
+            defaultZoom = 13;
             initAutocomplete(initLat, initLng, defaultZoom);
         });
-    } 
+    } else {
+        console.log("Geolocation is not available.");
+    }
     
-    setTimeout(function () {
-        userLocationNotFound();
-    }, 1000);
-}
-
-function userLocationNotFound(){
     initLat = 37.1;
     initLng = -95.7;
     defaultZoom = 3;
     initAutocomplete(initLat, initLng, defaultZoom);
-}
 
-setTimeout(function () {
-    if(!initLat && !initLng){
-        userLocationNotFound();
-    }
-}, 1000); 
+}
