@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Search Map</title>
+  <title>LocateMe</title>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <meta charset="utf-8">
   <link rel="stylesheet" href="css/bootstrap.css">
@@ -13,9 +13,16 @@
   
 </head>
 <body>
-
+<nav class="navbar navbar-default">
   <div class="container-fluid">
+      
     <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
       <a class="navbar-brand" id="img_brand" href="#"><img src="img/powered_by_google_on_white.png" /></a>
     </div>
 
@@ -30,7 +37,7 @@
 
     </div> 
   </div>
-
+</nav>
 <div id="map"></div>
     
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAb4duvTnAMojZDakIp74XWd4_HaJSxkd8&libraries=places&callback=initAutocomplete" async defer></script>
