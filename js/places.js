@@ -1,8 +1,7 @@
 var input = document.getElementById('input_form');
-var defaultZoom = 13;
-var initLat;
-var initLng;
-var markers = [];
+
+var height = $(window).height()-50;
+$(map).height(height);
 window.onload = loadNow;
 
 function initAutocomplete(lat, lng, defaultZoom) {
@@ -19,6 +18,8 @@ function initAutocomplete(lat, lng, defaultZoom) {
         map.addListener('bounds_changed', function() {
           searchBox.setBounds(map.getBounds());
         });
+    
+        var markers = [];
 
         searchBox.addListener('places_changed', function() {
           var places = searchBox.getPlaces();  
@@ -103,6 +104,10 @@ $('#input_form').keypress(function(e) {
 });
 
 function loadNow() {
+    var defaultZoom;
+    var initLat;
+    var initLng;
+    
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
             initLat = position.coords.latitude;
@@ -111,12 +116,12 @@ function loadNow() {
             initAutocomplete(initLat, initLng, defaultZoom);
         });
     } else {
+        initAutocomplete(initLat, initLng, defaultZoom);
         console.log("Geolocation is not available.");
     }
-    
-    initLat = 37.1;
-    initLng = -95.7;
-    defaultZoom = 3;
-    initAutocomplete(initLat, initLng, defaultZoom);
+
+    if((initLat === undefined) && (initLng === undefined) && (defaultZoom === undefined)) {
+        initAutocomplete(37.1, -95.7, 3);
+    }
 
 }
