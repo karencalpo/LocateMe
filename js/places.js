@@ -108,13 +108,15 @@ function loadNow() {
     var initLat;
     var initLng;
     
+    
+    
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(function(position) {
             initLat = position.coords.latitude;
             initLng = position.coords.longitude;
             defaultZoom = 13;
             initAutocomplete(initLat, initLng, defaultZoom);
-        });
+        }, function() { enableHighAccuracy: true; });
     } else {
         initAutocomplete(initLat, initLng, defaultZoom);
         console.log("Geolocation is not available.");
